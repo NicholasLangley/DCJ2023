@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class Character : Entity
 {
-    public enum PlayerColor { Red, Blue}
-    
+    public enum PlayerColor { Red, Blue }
+
 
     [SerializeField]
     public HealthBar playerHealthBar;
 
     [SerializeField]
-    public Image keyIndicator;
+    public Image keyIndicator, weaponNormal, Weapon2;
 
     [SerializeField]
     public PlayerColor playerColor;
@@ -24,6 +24,8 @@ public class Character : Entity
     bool ammo = true;
     bool key = false;
 
+    float timeSinceLastSwing = 10000f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +36,7 @@ public class Character : Entity
     // Update is called once per frame
     void Update()
     {
-        if (gameController.pause) {return; }
+        if (gameController.pause) { return; }
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             move();
@@ -52,15 +54,23 @@ public class Character : Entity
         {
             interact();
         }
-        else if  (Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetKeyDown(KeyCode.Space))
         {
             attack();
         }
-        else if (Input.GetKeyDown(KeyCode.Semicolon) &&  (playerColor == PlayerColor.Blue))
+        else if (Input.GetKeyDown(KeyCode.Semicolon) && (playerColor == PlayerColor.Blue))
         {
             gameController.advance();
         }
-
+        if(timeSinceLastSwing < 0.1f && playerColor == PlayerColor.Red)
+        {
+            timeSinceLastSwing += Time.deltaTime;
+        }
+        else if (playerColor == PlayerColor.Red )
+        {
+            Weapon2.enabled = false;
+            weaponNormal.enabled = true;
+        }
     }
 
     void move()
@@ -116,7 +126,7 @@ public class Character : Entity
             {
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    if(!attemptPush(p))
+                    if (!attemptPush(p))
                     {
                         return;
                     }
@@ -137,7 +147,7 @@ public class Character : Entity
                     Vector3 groundlevel = p.getPos();
                     //compensate for cube falling in pit
                     groundlevel.y += 1;
-                    if(pit == groundlevel)
+                    if (pit == groundlevel)
                     {
                         return;
                     }
@@ -184,14 +194,14 @@ public class Character : Entity
         if (playerColor == PlayerColor.Blue) { gameController.advance(); }
     }
 
-    
+
 
     void interact()
     {
         Interactable[] interactables = GameObject.FindObjectsOfType<Interactable>();
-        foreach(Interactable i in interactables)
+        foreach (Interactable i in interactables)
         {
-           if(i.getPos() == getTileInFront())
+            if (i.getPos() == getTileInFront())
             {
                 i.onInteract(gameObject.GetComponent<Character>());
                 if (playerColor == PlayerColor.Blue) { gameController.advance(); }
@@ -209,6 +219,8 @@ public class Character : Entity
                 newArrow.setDir(facing);
                 newArrow.transform.localPosition = transform.localPosition;
                 ammo = false;
+                Weapon2.enabled = true;
+                weaponNormal.enabled = false;
             }
             else { reload(); }
         }
@@ -222,6 +234,7 @@ public class Character : Entity
                     e.damageEntity(1);
                 }
             }
+            swingSword();
         }
         if (playerColor == PlayerColor.Blue) { gameController.advance(); }
     }
@@ -229,7 +242,7 @@ public class Character : Entity
 
 
 
-   
+
 
     public override void damageEntity(int dmg)
     {
@@ -251,7 +264,7 @@ public class Character : Entity
 
     private bool attemptPush(Pushable p)
     {
-        List<Vector3> allColliders = new List<Vector3>(); 
+        List<Vector3> allColliders = new List<Vector3>();
         allColliders.AddRange(map.getWalls());
         Entity[] entities = GameObject.FindObjectsOfType<Entity>();
         foreach (Entity e in entities)
@@ -284,11 +297,20 @@ public class Character : Entity
         }
     }
 
-    
+
 
     public void reload()
     {
         ammo = true;
+        Weapon2.enabled = false;
+        weaponNormal.enabled = true;
+    }
+
+    private void swingSword()
+    {
+        timeSinceLastSwing = 0f;
+        Weapon2.enabled = true;
+        weaponNormal.enabled = false;
     }
 
     public void giveKey()

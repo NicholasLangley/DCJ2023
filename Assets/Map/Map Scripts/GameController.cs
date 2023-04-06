@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         //load main menu
-        currentLevel = levelThree;
+        currentLevel = levelOne;
         loadLevel(currentLevel);
     }
 

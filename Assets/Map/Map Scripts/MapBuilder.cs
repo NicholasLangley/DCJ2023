@@ -5,14 +5,14 @@ using UnityEngine;
 public class MapBuilder : MonoBehaviour
 {
     
-    public Transform wallTile, halfWallTile, doorTile, lockedDoorTile, floorTile, pitTile, redPlayer, bluePlayer, boulderTile, heavyBoulderTile, potionTile, keyTile, mirrorTile;
+    public Transform wallTile, halfWallTile, doorTile, lockedDoorTile, floorTile, ceilingTile, pitTile, redPlayer, bluePlayer, boulderTile, heavyBoulderTile, potionTile, keyTile, mirrorTile;
 
     public Character redPlayerScript, bluePlayerScript;
 
     public EnemyController eController;
 
     static Color
-        wall = Color.white, halfWall = new Color(174f / 255f, 1, 1, 1),
+        wall = Color.white, halfWall = new Color(174f / 255f, 1, 1, 1), clear = Color.clear,
         door = new Color(127f / 255f, 127f / 255f, 127f / 255f, 1), lockedDoor = new Color(135f / 255f, 104f / 255f, 101f / 255f, 1),
         redSpawnN = Color.red, redSpawnE = new Color(180f / 255f, 0, 0, 1), redSpawnS = new Color(130f / 255f, 0, 0, 1), redSpawnW = new Color(90f / 255f, 0, 0, 1),
         blueSpawnN = Color.blue, blueSpawnE = new Color(0, 0, 170f / 255f, 1), blueSpawnS = new Color(0, 0, 120f / 255f, 1), blueSpawnW = new Color(0, 0, 60f / 255f, 1),
@@ -47,12 +47,15 @@ public class MapBuilder : MonoBehaviour
             {
                 Color pix = pixels[(x * mapImage.width) + z];
 
-                Transform newCeiling = Instantiate(floorTile);
-                newCeiling.localPosition = new Vector3(z, +1f, x);
-                newCeiling.rotation = Quaternion.Euler(180, 0, 0);
-                newCeiling.SetParent(transform);
+                if (pix != clear)
+                {
+                    Transform newCeiling = Instantiate(ceilingTile);
+                    newCeiling.localPosition = new Vector3(z, +1f, x);
+                    newCeiling.rotation = Quaternion.Euler(180, 0, 0);
+                    newCeiling.SetParent(transform);
+                }
 
-                if (pix != pit)
+                if (pix != pit && pix != clear)
                 {
                     Transform newFloor = Instantiate(floorTile);
                     newFloor.localPosition = new Vector3(z, -1f, x);
