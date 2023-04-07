@@ -6,14 +6,14 @@ using TMPro;
 
 public class Character : Entity
 {
-    public enum PlayerColor { Red, Blue }
+    public enum PlayerColor { Red, Blue, VICTORY }
     public enum MoveDirection { Forward, Back, Left, Right}
 
     public Image BlueTooHeavy;
     public TextMeshProUGUI BlueTooHeavyText;
     float TooHeavyTime = 100f;
 
-    public AudioSource Swing, Shoot, reloadBow, step, hurt;
+    public AudioSource Swing, Shoot, reloadBow, step, hurt, bump;
 
     [SerializeField]
     public HealthBar playerHealthBar;
@@ -142,6 +142,7 @@ public class Character : Entity
             if (nextPos == obstacle)
             {
                 gameController.advance();
+                bump.Play();
                 return;
             }
         }
@@ -150,7 +151,8 @@ public class Character : Entity
         {
             if (i.getPos() == nextPos && i.isBlocking())
             {
-                 gameController.advance(); 
+                 gameController.advance();
+                bump.Play();
                 return;
             }
         }
@@ -162,6 +164,7 @@ public class Character : Entity
             if (eNormalPos == nextPos)
             {
                 gameController.advance();
+                bump.Play();
                 return;
             }
         }
@@ -175,12 +178,14 @@ public class Character : Entity
                     if (!attemptPush(p))
                     {
                         gameController.advance();
+                        bump.Play();
                         return;
                     }
                 }
                 else
                 {
                      gameController.advance();
+                    bump.Play();
                     return;
                 }
             }

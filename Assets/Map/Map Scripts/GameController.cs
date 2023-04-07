@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
     public bool gameOverState = false;
 
     public MapBuilder mapper;
-    public Texture2D levelOne, levelTwo, levelThree;
+    public Texture2D levelOne, levelTwo, levelThree, levelFour;
     private Texture2D currentLevel;
     public GameObject gameOverUI;
     public EnemyController eController;
@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         //load main menu
-        //cutscenePlayer.playOpening();
+        cutscenePlayer.playOpening();
         advanceCount = 0;
         currentLevel = levelOne;
         loadLevel(currentLevel);
@@ -64,10 +64,14 @@ public class GameController : MonoBehaviour
         {
             currentLevel = levelThree;
         }
+        else if (currentLevel == levelThree)
+        {
+            currentLevel = levelFour;
+        }
         else
         {
             currentLevel = levelOne;
-            gameOver(Character.PlayerColor.Red);
+            gameOver(Character.PlayerColor.VICTORY);
             return;
         }
         loadLevel(currentLevel);
@@ -81,9 +85,13 @@ public class GameController : MonoBehaviour
         {
             gameOverText.text = "Game Over: Blue Died";
         }
-        else
+        else if (deadPlayer == Character.PlayerColor.Red)
         {
             gameOverText.text = "Game Over: Red Died";
+        }
+        else
+        {
+            gameOverText.text = "VICTORY!";
         }
         pauseGame();
     }

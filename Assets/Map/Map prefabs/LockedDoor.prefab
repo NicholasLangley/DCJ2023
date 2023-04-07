@@ -110,3 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f925b476c71c014b867f382f326a96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sc: {fileID: 0}
+  visible: {fileID: 2100000, guid: a6d22091a1da634499219ce801d98267, type: 2}
+  notVisible: {fileID: 2100000, guid: fddf1c5ade018eb4199650502e7600c1, type: 2}

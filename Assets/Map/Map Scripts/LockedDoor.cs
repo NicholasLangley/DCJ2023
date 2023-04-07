@@ -7,11 +7,8 @@ public class LockedDoor : Interactable
     private bool isOpen = false;
     private bool isLocked = true;
 
-    // Update is called once per frame
-    void Update()
-    {
-        gameObject.GetComponent<Renderer>().enabled = !isOpen;
-    }
+    public Material visible, notVisible;
+
 
     public override void onInteract(Character c)
     {
@@ -34,6 +31,14 @@ public class LockedDoor : Interactable
                 c.needKey();
                 sc.playSound(SoundEffectController.SoundClip.lockedDoor);
             }
+        }
+        if (isOpen)
+        {
+            gameObject.GetComponent<MeshRenderer>().material = notVisible;
+        }
+        else
+        {
+            gameObject.GetComponent<MeshRenderer>().material = visible;
         }
     }
 

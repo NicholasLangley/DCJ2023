@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class Door : Interactable
 {
+    public Material visible, notVisible;
+
     private bool isOpen = false;
     // Start is called before the first frame update
 
     // Update is called once per frame
-    void Update()
-    {
-        gameObject.GetComponent<Renderer>().enabled = !isOpen;
-    }
 
     public override void onInteract(Character c)
     {
         isOpen = !isOpen;
+        if(isOpen)
+        {
+            gameObject.GetComponent<MeshRenderer>().material = notVisible;
+        }
+        else
+        {
+            gameObject.GetComponent<MeshRenderer>().material = visible;
+        }
         sc.playSound(SoundEffectController.SoundClip.door);
     }
 
