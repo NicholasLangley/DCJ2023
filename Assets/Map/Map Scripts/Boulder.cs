@@ -23,14 +23,17 @@ public class Boulder : Pushable
         {
             nextPos.x = nextPos.x - 1;
         }
-        foreach(Vector3 possibleCollision in colliders)
+        foreach (Vector3 possibleCollision in colliders)
         {
-            if (nextPos == possibleCollision)
+            Vector3 pc = possibleCollision;
+            pc.y = 0;
+            if (nextPos == pc && possibleCollision.y != -1f)
             {
                 return false;
             }
         }
         transform.localPosition = nextPos;
+        sc.playSound(SoundEffectController.SoundClip.boulder);
         foreach(Vector3 p in pits)
         {
             if (transform.localPosition == p)
@@ -58,3 +61,4 @@ public class Boulder : Pushable
     }
     
 }
+

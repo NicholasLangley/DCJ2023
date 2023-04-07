@@ -4,9 +4,34 @@ using UnityEngine;
 
 public class shieldEnemy : Enemy
 {
+
+    public Mesh standing, angry, attackMesh;
+
+    bool playAttack = false;
+    float attackDur = 100f;
+
     private void Start()
     {
         health = 5;
+    }
+
+    private void Update()
+    {
+        if (playAttack)
+        {
+            attackDur += Time.deltaTime;
+
+            Vector3 nextPos = new Vector3(transform.localPosition.x, -0.51f + 0.1f * Mathf.Sin(8 * Mathf.PI * attackDur), transform.localPosition.z);
+            transform.localPosition = nextPos;
+
+            if (attackDur >= 0.125)
+            {
+                nextPos = new Vector3(transform.localPosition.x, -0.51f, transform.localPosition.z);
+                transform.localPosition = nextPos;
+                playAttack = false;
+                gameObject.GetComponent<MeshFilter>().sharedMesh = standing;
+            }
+        }
     }
 
     public override void advance()
@@ -38,6 +63,8 @@ public class shieldEnemy : Enemy
         foreach (Character c in characters)
         {
             Vector3 cPos = c.transform.localPosition;
+            pos.y = 0;
+            cPos.y = 0;
             if (cPos == pos)
             {
                 return true;
@@ -49,6 +76,8 @@ public class shieldEnemy : Enemy
     void startAttacking()
     {
         attacking = true;
+        gameObject.GetComponent<MeshFilter>().sharedMesh = angry;
+        sc.playSound(SoundEffectController.SoundClip.eAnger);
     }
 
     void finishAttacking()
@@ -57,17 +86,26 @@ public class shieldEnemy : Enemy
         foreach (Character c in characters)
         {
             Vector3 cPos = c.transform.localPosition;
-            if (cPos == getTileInFront())
+            cPos.y = 0f;
+            Vector3 frontTile = getTileInFront();
+            frontTile.y = 0;
+            if (cPos == frontTile)
             {
                 c.damageEntity(4);
             }
         }
+        gameObject.GetComponent<MeshFilter>().sharedMesh = attackMesh;
         attacking = false;
-        Debug.Log("SHIELD SMASH");
-        if(!checkForPlayer(getTileInFront()))
+        playAttack = true;
+        attackDur = 0f;
+        Vector3 nextPos = getTileInFront();
+        nextPos.y = 0;
+        if (!checkForPlayer(nextPos))
         {
+            nextPos = getTileInFront();
             transform.localPosition = getTileInFront();
         }
+        sc.playSound(SoundEffectController.SoundClip.eAttack);
     }
 
     void rotateClockwise()
@@ -94,5 +132,25 @@ public class shieldEnemy : Enemy
             facing -= 1;
         }
         faceDirection();
+    }
+
+    public override void faceDirection()
+    {
+        if (facing == Direction.North)
+        {
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        else if (facing == Direction.South)
+        {
+            transform.rotation = Quaternion.Euler(0, 270, 0);
+        }
+        else if (facing == Direction.East)
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 }

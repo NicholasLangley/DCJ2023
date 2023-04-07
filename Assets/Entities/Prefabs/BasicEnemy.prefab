@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113582216243422875}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2432090755550338912, guid: e31f7289eca031a4b8333bc7b11c65c9, type: 3}
 --- !u!23 &7959574397866698036
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8ceaf452413e4b84ebdc77996d523d2d, type: 2}
+  - {fileID: 2100000, guid: 98c8e26d7ec3514438aebf8b3ba60603, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -111,3 +111,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5c38844e963f04fb6ee6d10a869aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  facing: 0
+  health: 0
+  attacking: 0
+  hurt: {fileID: 1129563076489083904, guid: 14dea434b5b8b9e47acc0095c395be03, type: 3}
+  anger: {fileID: 6567732597417405549, guid: d67056cdd3e7cc5449126d8555e251d4, type: 3}
+  attackSound: {fileID: 3808210074127812684, guid: 7ee40d0ed069cd5478283db7aef55bc4, type: 3}
+  die: {fileID: 2031423957349829096, guid: f1961aaf1f4e00b43b26e3589776bc0f, type: 3}
+  happy: {fileID: 2100000, guid: 98c8e26d7ec3514438aebf8b3ba60603, type: 2}
+  angry: {fileID: 2100000, guid: d7948d180d8560848b36e83110493890, type: 2}

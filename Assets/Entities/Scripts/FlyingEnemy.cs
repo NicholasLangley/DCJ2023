@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class FlyingEnemy : Enemy
 {
+    public Material happy;
+    public Material angry;
+
+    bool playAttack = false;
+    float attackDur = 100f;
+
     private void Start()
     {
         health = 2;
@@ -11,8 +17,24 @@ public class FlyingEnemy : Enemy
 
     void Update()
     {
-        Vector3 nextPos = new Vector3(transform.localPosition.x, 0.1f * Mathf.Sin(Mathf.PI * Time.time) + 0.2f, transform.localPosition.z);
+        Vector3 nextPos = new Vector3(transform.localPosition.x, 0.05f * Mathf.Sin(Mathf.PI * Time.time) - 0.3f, transform.localPosition.z);
         transform.localPosition = nextPos;
+
+        if (playAttack)
+        {
+            attackDur += Time.deltaTime;
+
+            nextPos = new Vector3(transform.localPosition.x, transform.localPosition.y + 0.2f * Mathf.Sin(8 * Mathf.PI * attackDur), transform.localPosition.z);
+            transform.localPosition = nextPos;
+
+            if (attackDur >= 0.125)
+            {
+                nextPos = new Vector3(transform.localPosition.x, 0.05f * Mathf.Sin(Mathf.PI * Time.time) - 0.3f, transform.localPosition.z);
+                transform.localPosition = nextPos;
+                playAttack = false;
+                gameObject.GetComponent<MeshRenderer>().material = happy;
+            }
+        }
     }
 
     public override void advance()
@@ -88,7 +110,9 @@ public class FlyingEnemy : Enemy
 
     void startAttacking()
     {
+        gameObject.GetComponent<MeshRenderer>().material = angry;
         attacking = true;
+        sc.playSound(SoundEffectController.SoundClip.eAnger);
     }
 
     void finishAttacking()
@@ -105,7 +129,9 @@ public class FlyingEnemy : Enemy
             }
         }
         attacking = false;
-        Debug.Log("FLY ATTACK!");
+        playAttack = true;
+        sc.playSound(SoundEffectController.SoundClip.eAttack);
+        attackDur = 0f;
     }
 
     void flipDirection()
@@ -126,5 +152,25 @@ public class FlyingEnemy : Enemy
                 break;
         }
         faceDirection();
+    }
+
+    public override void faceDirection()
+    {
+        if (facing == Direction.North)
+        {
+            transform.rotation = Quaternion.Euler(0, 270, 0);
+        }
+        else if (facing == Direction.South)
+        {
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        else if (facing == Direction.East)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
     }
 }

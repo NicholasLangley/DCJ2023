@@ -16,6 +16,7 @@ public class Door : Interactable
     public override void onInteract(Character c)
     {
         isOpen = !isOpen;
+        sc.playSound(SoundEffectController.SoundClip.door);
     }
 
     public override bool isBlocking()

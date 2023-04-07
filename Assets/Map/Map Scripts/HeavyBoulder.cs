@@ -32,13 +32,16 @@ public class HeavyBoulder : Pushable
         }
         foreach(Vector3 possibleCollision in colliders)
         {
-            if (nextPos == possibleCollision)
+            Vector3 pc = possibleCollision;
+            pc.y = 0;
+            if (nextPos == pc && possibleCollision.y != -1f)
             {
                 return false;
             }
         }
         transform.localPosition = nextPos;
-        foreach(Vector3 p in pits)
+        sc.playSound(SoundEffectController.SoundClip.boulder);
+        foreach (Vector3 p in pits)
         {
             if (transform.localPosition == p)
             {

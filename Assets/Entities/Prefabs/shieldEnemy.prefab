@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3045679470899970030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 734.5, y: 366, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.6, z: 0.4}
+  m_LocalScale: {x: 0.1, y: 0.09, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3045679470899970030}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2432090755550338912, guid: 6ea18e05aee70b44890b55b412a8def3, type: 3}
 --- !u!23 &8616717710242174658
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -110,4 +110,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2f446906463844884e7da2847a3408, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  facing: 0
   health: 0
+  attacking: 0
+  hurt: {fileID: 1129563076489083904, guid: 14dea434b5b8b9e47acc0095c395be03, type: 3}
+  anger: {fileID: 6567732597417405549, guid: d67056cdd3e7cc5449126d8555e251d4, type: 3}
+  attackSound: {fileID: 3808210074127812684, guid: 7ee40d0ed069cd5478283db7aef55bc4, type: 3}
+  die: {fileID: 2031423957349829096, guid: f1961aaf1f4e00b43b26e3589776bc0f, type: 3}
+  standing: {fileID: -2432090755550338912, guid: 6ea18e05aee70b44890b55b412a8def3, type: 3}
+  angry: {fileID: -2432090755550338912, guid: 65537a569f56a3a4b81fb6351fbbcdce, type: 3}
+  attackMesh: {fileID: -2432090755550338912, guid: 144cd67d6cbb2d54496c2b9657244f0e, type: 3}

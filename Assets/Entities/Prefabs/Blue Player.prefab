@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 505687437469446351}
   - component: {fileID: 6364594026256265396}
   - component: {fileID: 1816264729022335172}
-  - component: {fileID: 3573267308498072973}
   - component: {fileID: -3997166925962252895}
   m_Layer: 0
   m_Name: Blue Player
@@ -30,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1343053892249153780}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 24, y: 0, z: 24}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343053892249153780}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2432090755550338912, guid: c2343794882876045ae3d83471e7a13b, type: 3}
 --- !u!23 &6364594026256265396
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -99,49 +98,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!20 &3573267308498072973
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1343053892249153780}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0.04
-    y: 0.25
-    width: 0.45
-    height: 0.72
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 90
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!114 &-3997166925962252895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,9 +110,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76e2c7d0390ef124c97b12e1e4c75b26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
   facing: 2
+  health: 0
   playerHealthBar: {fileID: 0}
+  damageArt: {fileID: 0}
+  keyIndicator: {fileID: 0}
+  weaponNormal: {fileID: 0}
+  Weapon2: {fileID: 0}
   playerColor: 0
   gameController: {fileID: 0}
   map: {fileID: 0}

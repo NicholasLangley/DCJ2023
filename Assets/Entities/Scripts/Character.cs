@@ -2,14 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Character : Entity
 {
     public enum PlayerColor { Red, Blue }
+    public enum MoveDirection { Forward, Back, Left, Right}
 
+    public Image BlueTooHeavy;
+    public TextMeshProUGUI BlueTooHeavyText;
+    float TooHeavyTime = 100f;
+
+    public AudioSource Swing, Shoot, reloadBow, step, hurt;
 
     [SerializeField]
     public HealthBar playerHealthBar;
+    private float lastDamagedAt = 100f;
+    public Image damageArt;
 
     [SerializeField]
     public Image keyIndicator, weaponNormal, Weapon2;
@@ -31,16 +40,28 @@ public class Character : Entity
     {
         faceDirection();
         playerHealthBar.setHealth(health);
+        damageArt.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (gameController.pause) { return; }
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            move();
-            if (playerColor == PlayerColor.Blue) { gameController.advance(); }
+            move((int)MoveDirection.Forward);
+        }
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            move((int)MoveDirection.Left);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            move((int)MoveDirection.Back);
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            move((int)MoveDirection.Right);
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
@@ -58,7 +79,7 @@ public class Character : Entity
         {
             attack();
         }
-        else if (Input.GetKeyDown(KeyCode.Semicolon) && (playerColor == PlayerColor.Blue))
+        else if (Input.GetKeyDown(KeyCode.Semicolon))
         {
             gameController.advance();
         }
@@ -71,33 +92,56 @@ public class Character : Entity
             Weapon2.enabled = false;
             weaponNormal.enabled = true;
         }
+
+        if (lastDamagedAt <= 0.05f)
+        {
+            damageArt.enabled = true;
+            lastDamagedAt += Time.deltaTime;
+        }
+        else
+        {
+            damageArt.enabled = false;
+        }
+
+        if (TooHeavyTime <= 1f)
+        {
+            BlueTooHeavy.enabled = true;
+            BlueTooHeavyText.enabled = true;
+            TooHeavyTime += Time.deltaTime;
+        }
+        else
+        {
+            BlueTooHeavy.enabled = false;
+            BlueTooHeavyText.enabled = false;
+        }
     }
 
-    void move()
+    public void move(int dir)
     {
         Vector3 nextPos;
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (dir == (int)MoveDirection.Forward)
         {
             nextPos = getTileInFront();
         }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            nextPos = getTileToLeft();
-        }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        else if (dir == (int)MoveDirection.Back)
         {
             nextPos = getTileBehind();
         }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        else if (dir == (int)MoveDirection.Left)
+        {
+            nextPos = getTileToLeft();
+        }
+        else
         {
             nextPos = getTileToRight();
         }
-        else { return; }
+
 
         foreach (Vector3 obstacle in map.getWalls())
         {
             if (nextPos == obstacle)
             {
+                gameController.advance();
                 return;
             }
         }
@@ -106,6 +150,7 @@ public class Character : Entity
         {
             if (i.getPos() == nextPos && i.isBlocking())
             {
+                 gameController.advance(); 
                 return;
             }
         }
@@ -116,6 +161,7 @@ public class Character : Entity
             eNormalPos.y = 0;
             if (eNormalPos == nextPos)
             {
+                gameController.advance();
                 return;
             }
         }
@@ -124,20 +170,23 @@ public class Character : Entity
         {
             if (p.getPos() == nextPos)
             {
-                if (Input.GetKeyDown(KeyCode.W))
+                if (dir == (int)MoveDirection.Forward)
                 {
                     if (!attemptPush(p))
                     {
+                        gameController.advance();
                         return;
                     }
                 }
                 else
                 {
+                     gameController.advance();
                     return;
                 }
             }
         }
         transform.localPosition = nextPos;
+        step.Play();
         foreach (Vector3 pit in map.getPits())
         {
             if (nextPos == pit)
@@ -149,6 +198,7 @@ public class Character : Entity
                     groundlevel.y += 1;
                     if (pit == groundlevel)
                     {
+                        gameController.advance();
                         return;
                     }
                 }
@@ -164,9 +214,10 @@ public class Character : Entity
                 p.onPickup(this);
             }
         }
+        gameController.advance();
     }
 
-    void rotateClockwise()
+    public void rotateClockwise()
     {
         if (facing == Direction.West)
         {
@@ -177,10 +228,10 @@ public class Character : Entity
             facing += 1;
         }
         faceDirection();
-        if (playerColor == PlayerColor.Blue) { gameController.advance(); }
+        gameController.advance();
     }
 
-    void rotateCounterClockwise()
+    public void rotateCounterClockwise()
     {
         if (facing == Direction.North)
         {
@@ -191,12 +242,12 @@ public class Character : Entity
             facing -= 1;
         }
         faceDirection();
-        if (playerColor == PlayerColor.Blue) { gameController.advance(); }
+        gameController.advance();
     }
 
 
 
-    void interact()
+    public void interact()
     {
         Interactable[] interactables = GameObject.FindObjectsOfType<Interactable>();
         foreach (Interactable i in interactables)
@@ -204,12 +255,14 @@ public class Character : Entity
             if (i.getPos() == getTileInFront())
             {
                 i.onInteract(gameObject.GetComponent<Character>());
-                if (playerColor == PlayerColor.Blue) { gameController.advance(); }
+                gameController.advance();
+                return;
             }
         }
+        gameController.advance();
     }
 
-    void attack()
+    public void attack()
     {
         if (playerColor == PlayerColor.Blue)
         {
@@ -218,9 +271,26 @@ public class Character : Entity
                 Arrow newArrow = Instantiate(arrow);
                 newArrow.setDir(facing);
                 newArrow.transform.localPosition = transform.localPosition;
+                if (facing == Direction.North)
+                {
+                    newArrow.transform.localRotation = Quaternion.Euler(90, 0, 00);
+                }
+                else if (facing == Direction.East)
+                {
+                    newArrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
+                }
+                else if (facing == Direction.South)
+                {
+                    newArrow.transform.localRotation = Quaternion.Euler(-90, 0, 0);
+                }
+                else
+                {
+                    newArrow.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                }
                 ammo = false;
                 Weapon2.enabled = true;
                 weaponNormal.enabled = false;
+                Shoot.Play();
             }
             else { reload(); }
         }
@@ -235,8 +305,9 @@ public class Character : Entity
                 }
             }
             swingSword();
+            Swing.Play();
         }
-        if (playerColor == PlayerColor.Blue) { gameController.advance(); }
+        gameController.advance();
     }
 
 
@@ -246,7 +317,9 @@ public class Character : Entity
 
     public override void damageEntity(int dmg)
     {
+        lastDamagedAt = 0f;
         health -= dmg;
+        hurt.Play();
         playerHealthBar.setHealth(health);
         if (health <= 0)
         {
@@ -256,9 +329,11 @@ public class Character : Entity
 
     private void fall()
     {
+        lastDamagedAt = 0f;
         Vector3 position = transform.localPosition;
         position.y -= 1f;
         transform.localPosition = position;
+        hurt.Play();
         setHealth(0);
     }
 
@@ -304,6 +379,7 @@ public class Character : Entity
         ammo = true;
         Weapon2.enabled = false;
         weaponNormal.enabled = true;
+        reloadBow.Play();
     }
 
     private void swingSword()
@@ -334,6 +410,6 @@ public class Character : Entity
 
     public void tooHeavy()
     {
-
+        TooHeavyTime = 0f;
     }
 }

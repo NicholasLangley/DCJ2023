@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Enemy : Entity
 {
     public bool attacking;
+    public SoundEffectController sc;
 
     public override void damageEntity(int dmg)
     {
@@ -16,7 +17,12 @@ public abstract class Enemy : Entity
         health = hp;
         if(health <= 0)
         {
+            sc.playSound(SoundEffectController.SoundClip.eDie);
             kill();
+        }
+        else
+        {
+            sc.playSound(SoundEffectController.SoundClip.eHurt);
         }
     }
 
@@ -26,4 +32,9 @@ public abstract class Enemy : Entity
     }
 
     public abstract void advance();
+
+    public  void setSc(SoundEffectController s)
+    {
+        sc = s;
+    }
 }

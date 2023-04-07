@@ -115,7 +115,7 @@ public abstract class Entity : MonoBehaviour
         return position;
     }
 
-    public void faceDirection()
+    public virtual void faceDirection()
     {
         if (facing == Direction.North)
         {

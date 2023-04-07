@@ -1,24 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 
 public class GameController : MonoBehaviour
 {
     public bool pause = false;
+    public bool gameOverState = false;
 
     public MapBuilder mapper;
     public Texture2D levelOne, levelTwo, levelThree;
     private Texture2D currentLevel;
     public GameObject gameOverUI;
     public EnemyController eController;
+    public Cutscene cutscenePlayer;
+    public TextMeshProUGUI gameOverText;
+
+    int advanceCount;
 
     // Start is called before the first frame update
     void Start()
     {
         //load main menu
+        //cutscenePlayer.playOpening();
+        advanceCount = 0;
         currentLevel = levelOne;
         loadLevel(currentLevel);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !gameOverState)
+        {
+            if (pause)
+            {
+                gameOverUI.SetActive(false);
+                unpause();
+            }
+            else
+            {
+                gameOverUI.SetActive(true);
+                gameOverText.text = "";
+                pauseGame();
+            }
+        }
     }
 
     public void loadLevel(Texture2D lvl)
@@ -50,6 +76,15 @@ public class GameController : MonoBehaviour
     public void gameOver(Character.PlayerColor deadPlayer)
     {
         gameOverUI.SetActive(true);
+        gameOverState = true;
+        if (deadPlayer == Character.PlayerColor.Blue)
+        {
+            gameOverText.text = "Game Over: Blue Died";
+        }
+        else
+        {
+            gameOverText.text = "Game Over: Red Died";
+        }
         pauseGame();
     }
 
@@ -58,6 +93,7 @@ public class GameController : MonoBehaviour
         eController.clearEnemies();
         loadLevel(currentLevel);
         gameOverUI.SetActive(false);
+        gameOverState = false;
         unpause();
     }
 
@@ -68,7 +104,12 @@ public class GameController : MonoBehaviour
 
     public void advance()
     {
-        eController.advance();
+        advanceCount += 1;
+        if (advanceCount >= 2)
+        {
+            advanceCount = 0;
+            eController.advance();
+        }
     }
 
     public void pauseGame()

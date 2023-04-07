@@ -7,6 +7,7 @@ public class Key : Pickup
     public override void onPickup(Character c)
     {
         c.giveKey();
+        sc.playSound(SoundEffectController.SoundClip.key);
         Destroy(gameObject);
     }
 

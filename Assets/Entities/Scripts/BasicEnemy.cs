@@ -4,9 +4,38 @@ using UnityEngine;
 
 public class BasicEnemy : Enemy
 {
+    public Material happy;
+    public Material angry;
+
+    bool playAttack = false;
+    float attackDur = 100f;
+
+
+
     private void Start()
     {
         health = 3;
+    }
+
+    void Update()
+    {
+        
+
+        if (playAttack)
+        {
+            attackDur += Time.deltaTime;
+
+            Vector3 nextPos = new Vector3(transform.localPosition.x, -0.3f + 0.1f * Mathf.Sin(8* Mathf.PI * attackDur), transform.localPosition.z);
+            transform.localPosition = nextPos;
+
+            if (attackDur >= 0.125)
+            {
+                nextPos = new Vector3(transform.localPosition.x, -0.3f, transform.localPosition.z);
+                transform.localPosition = nextPos;
+                playAttack = false;
+                gameObject.GetComponent<MeshRenderer>().material = happy;
+            }
+        }
     }
 
     public override void advance()
@@ -117,6 +146,8 @@ public class BasicEnemy : Enemy
 
     void startAttacking()
     {
+        gameObject.GetComponent<MeshRenderer>().material = angry;
+        sc.playSound(SoundEffectController.SoundClip.eAnger);
         attacking = true;
     }
 
@@ -126,12 +157,37 @@ public class BasicEnemy : Enemy
         foreach (Character c in characters)
         {
             Vector3 cPos = c.transform.localPosition;
-            if (cPos == getTileInFront())
+            cPos.y = 0f;
+            Vector3 frontTile = getTileInFront();
+            frontTile.y = 0;
+            if (cPos == frontTile)
             {
                 c.damageEntity(2);
             }
         }
         attacking = false;
-        Debug.Log("basic attack!");
+        playAttack = true;
+        sc.playSound(SoundEffectController.SoundClip.eAttack);
+        attackDur = 0f;
+    }
+
+    public override void faceDirection()
+    {
+        if (facing == Direction.North)
+        {
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        else if (facing == Direction.South)
+        {
+            transform.rotation = Quaternion.Euler(0, 270, 0);
+        }
+        else if (facing == Direction.East)
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 }

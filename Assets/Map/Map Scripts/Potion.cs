@@ -7,6 +7,7 @@ public class Potion : Pickup
     public override void onPickup(Character c)
     {
         c.setHealth(10);
+        sc.playSound(SoundEffectController.SoundClip.potion);
         Destroy(gameObject);
     }
 

@@ -6,6 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     public Transform basicEnemy, flyingEnemy, shieldEnemy;
    public enum EnemyType {basic, shield, flying}
+    public SoundEffectController sc;
 
    public void spawnEnemy(EnemyType type, Vector3 pos, Character.Direction dir)
     {
@@ -14,8 +15,10 @@ public class EnemyController : MonoBehaviour
         {
             case EnemyType.basic:
                 newEnemy = Instantiate(basicEnemy);
+                pos.y -= 0.30f;
                 break;
             case EnemyType.shield:
+                pos.y -= 0.51f;
                 newEnemy = Instantiate(shieldEnemy);
                 break;
             case EnemyType.flying:
@@ -28,6 +31,7 @@ public class EnemyController : MonoBehaviour
         newEnemy.localPosition = pos;
         newEnemy.SetParent(transform);
         newEnemy.GetComponent<Entity>().setDirection(dir);
+        newEnemy.GetComponent<Enemy>().setSc(sc); 
     }
 
     public void advance()

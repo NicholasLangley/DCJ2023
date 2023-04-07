@@ -5,11 +5,13 @@ using UnityEngine;
 public class MapBuilder : MonoBehaviour
 {
     
-    public Transform wallTile, halfWallTile, doorTile, lockedDoorTile, floorTile, ceilingTile, pitTile, redPlayer, bluePlayer, boulderTile, heavyBoulderTile, potionTile, keyTile, mirrorTile;
+    public Transform wallTile, halfWallTile, doorTile, lockedDoorTile, floorTile, floorTile2, floorTile3, ceilingTile, pitTile, redPlayer, bluePlayer, boulderTile, heavyBoulderTile, potionTile, keyTile, mirrorTile;
 
     public Character redPlayerScript, bluePlayerScript;
 
     public EnemyController eController;
+
+    public SoundEffectController sc;
 
     static Color
         wall = Color.white, halfWall = new Color(174f / 255f, 1, 1, 1), clear = Color.clear,
@@ -35,7 +37,7 @@ public class MapBuilder : MonoBehaviour
     {
         walls = new List<Vector3>();
         pits = new List<Vector3>();
-    }
+}
 
     public void BuildLevel(Texture2D mapImage)
     {
@@ -57,7 +59,21 @@ public class MapBuilder : MonoBehaviour
 
                 if (pix != pit && pix != clear)
                 {
-                    Transform newFloor = Instantiate(floorTile);
+                    Transform newFloor;
+                    int rand = Random.Range(0, 3);
+                    if (rand == 0)
+                    {
+                        newFloor = Instantiate(floorTile);
+                    }
+                    else if (rand == 1)
+                    {
+                        newFloor = Instantiate(floorTile2);
+                    }
+                    else
+                    {
+                        newFloor = Instantiate(floorTile3);
+                    }
+
                     newFloor.localPosition = new Vector3(z, -1f, x);
                     newFloor.SetParent(transform);
                 }
@@ -93,6 +109,7 @@ public class MapBuilder : MonoBehaviour
                     Vector3 position = new Vector3(z, 0, x);
                     newDoor.localPosition = position;
                     newDoor.SetParent(transform);
+                    newDoor.GetComponent<Interactable>().setSc(sc);
                 }
                 else if (pix == lockedDoor)
                 {
@@ -100,6 +117,7 @@ public class MapBuilder : MonoBehaviour
                     Vector3 position = new Vector3(z, 0, x);
                     newLockedDoor.localPosition = position;
                     newLockedDoor.SetParent(transform);
+                    newLockedDoor.GetComponent<Interactable>().setSc(sc);
                 }
                 else if(pix == boulder)
                 {
@@ -107,6 +125,7 @@ public class MapBuilder : MonoBehaviour
                     Vector3 position = new Vector3(z, 0, x);
                     newBoulder.localPosition = position;
                     newBoulder.SetParent(transform);
+                    newBoulder.GetComponent<Pushable>().setSc(sc);
                 }
                 else if (pix == heavyBoulder)
                 {
@@ -114,6 +133,7 @@ public class MapBuilder : MonoBehaviour
                     Vector3 position = new Vector3(z, 0, x);
                     newBoulder.localPosition = position;
                     newBoulder.SetParent(transform);
+                    newBoulder.GetComponent<Pushable>().setSc(sc);
                 }
                 else if (pix == blueSpawnN)
                 {
@@ -209,6 +229,7 @@ public class MapBuilder : MonoBehaviour
                     Vector3 position = new Vector3(z, 0, x);
                     newPotion.localPosition = position;
                     newPotion.SetParent(transform);
+                    newPotion.GetComponent<Pickup>().setSc(sc);
                 }
                 else if (pix == key)
                 {
@@ -216,6 +237,7 @@ public class MapBuilder : MonoBehaviour
                     Vector3 position = new Vector3(z, 0, x);
                     newKey.localPosition = position;
                     newKey.SetParent(transform);
+                    newKey.GetComponent<Pickup>().setSc(sc);
                 }
                 else if (pix == mirror)
                 {
@@ -223,6 +245,7 @@ public class MapBuilder : MonoBehaviour
                     Vector3 position = new Vector3(z, 0, x);
                     newMirror.localPosition = position;
                     newMirror.SetParent(transform);
+                    newMirror.GetComponent<Pickup>().setSc(sc);
                 }
 
             }

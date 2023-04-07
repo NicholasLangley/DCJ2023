@@ -18,6 +18,7 @@ public class LockedDoor : Interactable
         if (!isLocked)
         {
             isOpen = !isOpen;
+            sc.playSound(SoundEffectController.SoundClip.door);
         }
         else
         {
@@ -26,10 +27,12 @@ public class LockedDoor : Interactable
                 isLocked = false;
                 isOpen = !isOpen;
                 c.useKey();
+                sc.playSound(SoundEffectController.SoundClip.door);
             }
             else
             {
                 c.needKey();
+                sc.playSound(SoundEffectController.SoundClip.lockedDoor);
             }
         }
     }

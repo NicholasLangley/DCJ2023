@@ -7,7 +7,9 @@ public class Mirror : Pickup
     public override void onPickup(Character c)
     {
         GameController gc = GameObject.FindObjectOfType<GameController>();
+        sc.playSound(SoundEffectController.SoundClip.mirror);
         gc.levelUp();
+        Destroy(gameObject);
     }
 
     void Update()
