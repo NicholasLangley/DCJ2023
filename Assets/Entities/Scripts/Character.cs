@@ -103,16 +103,19 @@ public class Character : Entity
             damageArt.enabled = false;
         }
 
-        if (TooHeavyTime <= 1f)
+        if (playerColor == PlayerColor.Blue)
         {
-            BlueTooHeavy.enabled = true;
-            BlueTooHeavyText.enabled = true;
-            TooHeavyTime += Time.deltaTime;
-        }
-        else
-        {
-            BlueTooHeavy.enabled = false;
-            BlueTooHeavyText.enabled = false;
+            if (TooHeavyTime <= 1f)
+            {
+                TooHeavyTime += Time.deltaTime;
+                BlueTooHeavy.enabled = true;
+                BlueTooHeavyText.enabled = true;
+            }
+            else
+            {
+                BlueTooHeavy.enabled = false;
+                BlueTooHeavyText.enabled = false;
+            }
         }
     }
 
@@ -216,7 +219,9 @@ public class Character : Entity
 
             if (nextPos.x == p.getPos().x && nextPos.z == p.getPos().z)
             {
+                gameController.advance();
                 p.onPickup(this);
+                return;
             }
         }
         gameController.advance();
@@ -415,6 +420,9 @@ public class Character : Entity
 
     public void tooHeavy()
     {
+
         TooHeavyTime = 0f;
+        BlueTooHeavy.enabled = true;
+        BlueTooHeavyText.enabled = true;
     }
 }

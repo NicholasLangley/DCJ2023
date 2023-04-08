@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
+        if (advanceCount % 2 == 1) { advanceCount = 0; }
         if (Input.GetKeyDown(KeyCode.Escape) && !gameOverState)
         {
             if (pause)
@@ -61,6 +62,7 @@ public class GameController : MonoBehaviour
         mapper.clearLevel();
         eController.clearEnemies();
         mapper.BuildLevel(lvl);
+        advanceCount = 0;
     }
 
     public void levelUp()
@@ -84,10 +86,12 @@ public class GameController : MonoBehaviour
         else
         {
             currentLevel = levelOne;
+            cutscenePlayer.playClosing();
             gameOver(Character.PlayerColor.VICTORY);
             return;
         }
         loadLevel(currentLevel);
+        advanceCount = 0;
     }
 
     public void gameOver(Character.PlayerColor deadPlayer)
@@ -116,6 +120,7 @@ public class GameController : MonoBehaviour
         gameOverUI.SetActive(false);
         gameOverState = false;
         unpause();
+        advanceCount = 0;
     }
 
     public void quitGame()
@@ -147,7 +152,6 @@ public class GameController : MonoBehaviour
     {
         creditsUI.SetActive(true);
         creditsVis = true;
-        Debug.Log("here");
     }
 
     public void unshowCredits()
