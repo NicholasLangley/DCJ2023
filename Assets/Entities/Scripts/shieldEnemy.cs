@@ -91,7 +91,7 @@ public class shieldEnemy : Enemy
             frontTile.y = 0;
             if (cPos == frontTile)
             {
-                c.damageEntity(4);
+                c.damageEntity(3);
             }
         }
         gameObject.GetComponent<MeshFilter>().sharedMesh = attackMesh;

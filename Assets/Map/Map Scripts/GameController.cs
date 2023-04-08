@@ -8,14 +8,16 @@ public class GameController : MonoBehaviour
 {
     public bool pause = false;
     public bool gameOverState = false;
+    bool creditsVis = false;
 
     public MapBuilder mapper;
-    public Texture2D levelOne, levelTwo, levelThree, levelFour;
+    public Texture2D levelOne, levelTwo, levelThree, levelFour, levelFive;
     private Texture2D currentLevel;
     public GameObject gameOverUI;
     public EnemyController eController;
     public Cutscene cutscenePlayer;
     public TextMeshProUGUI gameOverText;
+    public GameObject creditsUI;
 
     int advanceCount;
 
@@ -45,6 +47,13 @@ public class GameController : MonoBehaviour
                 pauseGame();
             }
         }
+        if(creditsVis == true)
+        {
+            if (Input.anyKeyDown)
+            {
+                unshowCredits();
+            }
+        }
     }
 
     public void loadLevel(Texture2D lvl)
@@ -67,6 +76,10 @@ public class GameController : MonoBehaviour
         else if (currentLevel == levelThree)
         {
             currentLevel = levelFour;
+        }
+        else if (currentLevel == levelFour)
+        {
+            currentLevel = levelFive;
         }
         else
         {
@@ -128,5 +141,18 @@ public class GameController : MonoBehaviour
     public void unpause()
     {
         pause = false;
+    }
+
+    public void showCredits()
+    {
+        creditsUI.SetActive(true);
+        creditsVis = true;
+        Debug.Log("here");
+    }
+
+    public void unshowCredits()
+    {
+        creditsUI.SetActive(false);
+        creditsVis = false;
     }
 }
